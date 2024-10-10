@@ -12,7 +12,7 @@ export default function Home() {
     fetch("http://localhost:8000/simulations", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({  })
+      body: JSON.stringify({})
     }).then(resp => resp.json())
     .then(data => {
       console.log(data);
@@ -39,7 +39,6 @@ export default function Home() {
     setSimSpeed(newValue);
   };
 
-
   return (
     <main>
       <div>
@@ -53,25 +52,56 @@ export default function Home() {
           Stop
         </button>
       </div>
-      <svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" style={{backgroundColor:"lightblue"}}>
+      <svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" style={{ backgroundColor: "lightblue" }}>
+      
+        {/* Calle horizontal */}
+        <rect x={0} y={200} width={800} height={80} style={{ fill: "lightgray" }}></rect>
+        
+        {/* Calle vertical */}
+        <rect x={350} y={0} width={80} height={500} style={{ fill: "lightgray" }}></rect>
 
-      <rect x={0} y={200} width={800} height={80} style={{fill: "lightgray"}}></rect>
-      {/* <image x={0} y={240} href="./racing-car.png"/> */}
-      {
-        cars.map(car =>
-          <image id={car.id} x={car.pos[0]*32} y={200 + car.pos[1]*20} width={32} href={car.id == 1 ? "./dark-racing-car.png" : "./racing-car.png"}/>
-        )
-      }
+        {/* Semaforo horizontal */}
+        <g transform="translate(330, 180)">
+          <rect width={40} height={80} style={{ fill: "black" }} />
+          <circle cx={20} cy={20} r={10} style={{ fill: "red" }} />
+          <circle cx={20} cy={40} r={10} style={{ fill: "yellow" }} />
+          <circle cx={20} cy={60} r={10} style={{ fill: "green" }} />
+        </g>
 
-<rect x={350} y={0} width={80} height={800} style={{fill: "lightgray"}}></rect>
-      {/* <image x={0} y={240} href="./racing-car.png"/> */}
-      {
-  cars.map(car =>
-    <image id={car.id} y={car.pos[0]*32} x={380 + car.pos[1]*20} width={32} href={car.id === 1 ? "./dark-racing-car.png" : "./racing-car.png"} 
-      transform={`rotate(90, ${380 + car.pos[1]*20 + 16}, ${car.pos[0]*32 + 16})`} 
-    />
-  )
-}
+        {/* Semaforo vertical */}
+        <g transform="translate(340, 180) rotate(90)">
+          <rect width={40} height={80} style={{ fill: "black" }} />
+          <circle cx={20} cy={20} r={10} style={{ fill: "red" }} />
+          <circle cx={20} cy={40} r={10} style={{ fill: "yellow" }} />
+          <circle cx={20} cy={60} r={10} style={{ fill: "green" }} />
+        </g>
+
+        {/* Mostrar los carros en horizontal */}
+        {
+          cars.map((car, index) => (
+            <image
+              key={car.id}
+              x={car.pos[0] * 32}
+              y={200 + car.pos[1] * 20}
+              width={32}
+              href={car.id === 1 ? "./dark-racing-car.png" : "./racing-car.png"}
+            />
+          ))
+        }
+
+        {/* Mostrar los carros en vertical */}
+        {
+          cars.map((car, index) => (
+            <image
+              key={car.id}
+              y={car.pos[0] * 32}
+              x={380 + car.pos[1] * 20}
+              width={32}
+              href={car.id === 1 ? "./dark-racing-car.png" : "./racing-car.png"}
+              transform={`rotate(90, ${380 + car.pos[1] * 20 + 16}, ${car.pos[0] * 32 + 16})`}
+            />
+          ))
+        }
       </svg>
     </main>
   );
