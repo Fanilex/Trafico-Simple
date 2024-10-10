@@ -61,7 +61,7 @@ export default function Home() {
         <rect x={350} y={0} width={80} height={500} style={{ fill: "lightblue" }}></rect>
 
         {/* Semaforo horizontal */}
-        <g transform="translate(330, 180)">
+        <g transform="translate(350, 200)">
           <rect width={40} height={80} style={{ fill: "black" }} />
           <circle cx={20} cy={20} r={10} style={{ fill: "red" }} />
           <circle cx={20} cy={40} r={10} style={{ fill: "yellow" }} />
@@ -69,7 +69,7 @@ export default function Home() {
         </g>
 
         {/* Semaforo vertical */}
-        <g transform="translate(340, 180) rotate(90)">
+        <g transform="translate(430, 160) rotate(90)">
           <rect width={40} height={80} style={{ fill: "black" }} />
           <circle cx={20} cy={20} r={10} style={{ fill: "red" }} />
           <circle cx={20} cy={40} r={10} style={{ fill: "yellow" }} />
