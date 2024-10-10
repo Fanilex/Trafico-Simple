@@ -1,4 +1,4 @@
-using Agents, Random # Initial commit
+using Agents, Random
 using StaticArrays: SVector
 
 @agent struct Car(ContinuousAgent{2,Float64})

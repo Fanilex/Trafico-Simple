@@ -53,15 +53,20 @@ export default function Home() {
           Stop
         </button>
       </div>
-      <svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" style={{backgroundColor:"white"}}>
+      <svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" style={{backgroundColor:"blue"}}>
 
-      <rect x={0} y={200} width={800} height={80} style={{fill: "darkgray"}}></rect>
-      {/* <image x={0} y={240} href="./racing-car.png"/> */}
-      {
-        cars.map(car =>
-          <image id={car.id} x={car.pos[0]*32} y={200 + car.pos[1]*20} width={32} href={car.id == 1 ? "./dark-racing-car.png" : "./racing-car.png"}/>
-        )
-      }
+        {/* Horizontal road */}
+        <rect x={0} y={200} width={800} height={80} style={{fill: "darkgray"}}></rect>
+
+        {/* Perpendicular (vertical) road */}
+        <rect x={360} y={0} width={80} height={500} style={{fill: "darkgray"}}></rect>
+
+        {/* Displaying cars */}
+        {
+          cars.map(car =>
+            <image id={car.id} x={car.pos[0]*32} y={200 + car.pos[1]*20} width={32} href={car.id == 1 ? "./dark-racing-car.png" : "./racing-car.png"}/>
+          )
+        }
       </svg>
     </main>
   );
