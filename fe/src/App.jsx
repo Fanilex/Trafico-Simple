@@ -61,19 +61,19 @@ export default function Home() {
         <rect x={350} y={0} width={80} height={500} style={{ fill: "lightblue" }}></rect>
 
         {/* Semaforo horizontal */}
-        <g transform="translate(350, 200)">
-          <rect width={40} height={80} style={{ fill: "black" }} />
-          <circle cx={20} cy={20} r={10} style={{ fill: "red" }} />
-          <circle cx={20} cy={40} r={10} style={{ fill: "yellow" }} />
-          <circle cx={20} cy={60} r={10} style={{ fill: "green" }} />
+        <g transform="translate(330, 240)">
+          <rect width={20} height={40} style={{ fill: "black" }} />
+          <circle cx={10} cy={10} r={5} style={{ fill: "red" }} />
+          <circle cx={10} cy={20} r={5} style={{ fill: "yellow" }} />
+          <circle cx={10} cy={30} r={5} style={{ fill: "green" }} />
         </g>
 
         {/* Semaforo vertical */}
-        <g transform="translate(430, 160) rotate(90)">
-          <rect width={40} height={80} style={{ fill: "black" }} />
-          <circle cx={20} cy={20} r={10} style={{ fill: "red" }} />
-          <circle cx={20} cy={40} r={10} style={{ fill: "yellow" }} />
-          <circle cx={20} cy={60} r={10} style={{ fill: "green" }} />
+        <g transform="translate(390, 180) rotate(90)">
+          <rect width={20} height={40} style={{ fill: "black" }} />
+          <circle cx={10} cy={10} r={5} style={{ fill: "red" }} />
+          <circle cx={10} cy={20} r={5} style={{ fill: "yellow" }} />
+          <circle cx={10} cy={30} r={5} style={{ fill: "green" }} />
         </g>
 
         {/* Mostrar los carros en horizontal */}
