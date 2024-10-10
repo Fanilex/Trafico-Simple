@@ -52,13 +52,13 @@ export default function Home() {
           Stop
         </button>
       </div>
-      <svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" style={{ backgroundColor: "lightblue" }}>
+      <svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" style={{ backgroundColor: "lightgreen" }}>
       
         {/* Calle horizontal */}
-        <rect x={0} y={200} width={800} height={80} style={{ fill: "lightgray" }}></rect>
+        <rect x={0} y={200} width={800} height={80} style={{ fill: "lightblue" }}></rect>
         
         {/* Calle vertical */}
-        <rect x={350} y={0} width={80} height={500} style={{ fill: "lightgray" }}></rect>
+        <rect x={350} y={0} width={80} height={500} style={{ fill: "lightblue" }}></rect>
 
         {/* Semaforo horizontal */}
         <g transform="translate(330, 180)">
@@ -84,7 +84,7 @@ export default function Home() {
               x={car.pos[0] * 32}
               y={200 + car.pos[1] * 20}
               width={32}
-              href={car.id === 1 ? "./dark-racing-car.png" : "./racing-car.png"}
+              href={car.id === 1 ? "./pato.png" : "./pato.png"}
             />
           ))
         }
@@ -97,7 +97,7 @@ export default function Home() {
               y={car.pos[0] * 32}
               x={380 + car.pos[1] * 20}
               width={32}
-              href={car.id === 1 ? "./dark-racing-car.png" : "./racing-car.png"}
+              href={car.id === 1 ? "./pato.png" : "./pato.png"}
               transform={`rotate(90, ${380 + car.pos[1] * 20 + 16}, ${car.pos[0] * 32 + 16})`}
             />
           ))
