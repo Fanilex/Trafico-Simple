@@ -11,31 +11,42 @@ route("/simulations", method = POST) do
     id = string(uuid1())
     instances[id] = model
 
-    cars = []
-    for car in allagents(model)
-        push!(cars, car)
+    traffic_lights = []
+    for light in allagents(model)
+        light_data = Dict(
+            "id" => string(light.id),
+            "pos" => Tuple(light.pos),
+            "color" => string(light.color)
+        )
+        push!(traffic_lights, light_data)
+        println("Enviando datos del semáforo (setup): ", light_data)
     end
-    
-    json(Dict("Location" => "/simulations/$id", "cars" => cars))
+
+    json(Dict("Location" => "/simulations/$id", "traffic_lights" => traffic_lights))
 end
 
 route("/simulations/:id") do
-    println(payload(:id))
     model = instances[payload(:id)]
     run!(model, 1)
-    cars = []
-    for car in allagents(model)
-        push!(cars, car)
-    end
-    
-    json(Dict("cars" => cars))
-end
 
+    traffic_lights = []
+    for light in allagents(model)
+        light_data = Dict(
+            "id" => string(light.id),
+            "pos" => Tuple(light.pos),
+            "color" => string(light.color)
+        )
+        push!(traffic_lights, light_data)
+        println("Enviando datos del semáforo (actualización): ", light_data)
+    end
+
+    json(Dict("traffic_lights" => traffic_lights))
+end
 
 Genie.config.run_as_server = true
 Genie.config.cors_headers["Access-Control-Allow-Origin"] = "*"
 Genie.config.cors_headers["Access-Control-Allow-Headers"] = "Content-Type"
-Genie.config.cors_headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS" 
+Genie.config.cors_headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
 Genie.config.cors_allowed_origins = ["*"]
 
 up()

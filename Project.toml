@@ -1,0 +1,7 @@
+[deps]
+Agents = "46ada45e-f475-11e8-01d0-f70cc89e6671"
+Genie = "c43c736e-a2d1-11e8-161f-af95117fbd1e"
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
