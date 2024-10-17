@@ -69,10 +69,11 @@ export default function Home() {
         <button onClick={handleStop}>Stop</button>
       </div>
       <svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" style={{ backgroundColor: "lightgreen" }}>
+        {/* Calles */}
         <rect x={0} y={200} width={800} height={80} style={{ fill: "lightblue" }}></rect>
         <rect x={350} y={0} width={80} height={500} style={{ fill: "lightblue" }}></rect>
 
-        {/* semaforos */}
+        {/* Semáforos */}
         <g transform="translate(330, 240)">
           <rect width={20} height={40} style={{ fill: "black" }} />
           <circle cx={10} cy={10} r={5} style={{ fill: lightHorizontal === "red" ? "red" : "gray" }} />
@@ -87,14 +88,14 @@ export default function Home() {
           <circle cx={10} cy={30} r={5} style={{ fill: lightVertical === "green" ? "green" : "gray" }} />
         </g>
 
-        {/* coches, bueno patos */}
+        {/* Renderizar los coches */}
         {cars.map(car => (
           <image
             key={car.id}
-            x={car.pos[0] * 32}
-            y={200 + car.pos[1] * 20}
+            x={car.pos[1] === 0 ? car.pos[0] * 32 : 370}  // Posición x para coches en calle horizontal, 370 para los verticales
+            y={car.pos[1] === 0 ? 240 : car.pos[1] * 32}   // Posición y para coches en calle vertical, 240 para los horizontales
             width={32}
-            href={car.id === 1 ? "./pato.png" : "./pato.png"}
+            href="./pato.png"
           />
         ))}
       </svg>

@@ -24,7 +24,7 @@ end
 
 # funcionamiento de los semaforos
 function cycle_light!(light::TrafficLight)
-    if light.timer >= 10
+    if light.timer >= 20
         light.timer = 0
         light.state = light.state == :green ? :yellow :
                       light.state == :yellow ? :red : :green
@@ -55,9 +55,9 @@ end
 function agent_step!(agent::Car, model::TrafficModel)
     light_horizontal, light_vertical = model.traffic_lights
 
-    current_light = agent.pos[1] > 0 ? light_horizontal : light_vertical
+    # Decidir el semáforo basado en la posición
+    current_light = agent.pos[2] == 0 ? light_horizontal : light_vertical  # Cambia si están en el eje Y
 
-    # segun que esto cambia la velocidad del auto segun el estado del semaforo, pero apenas estoy probando
     if current_light.state == :red
         new_velocity = 0.0
     else
@@ -66,9 +66,16 @@ function agent_step!(agent::Car, model::TrafficModel)
 
     new_velocity = clamp(new_velocity, 0.0, 1.0)
 
-    agent.vel = SVector(new_velocity, 0.0)
+    # Actualiza la velocidad dependiendo de la dirección (eje X o Y)
+    if agent.pos[2] == 0  # Calle horizontal
+        agent.vel = SVector(new_velocity, 0.0)
+    else  # Calle vertical
+        agent.vel = SVector(0.0, new_velocity)
+    end
+
     move_agent!(agent, model)
 end
+
 
 function wrap_position!(pos::SVector{2, Float64}, space::ContinuousSpace{2, true, Float64, typeof(Agents.no_vel_update)})
     xmin, xmax = 0.0, space.extent[1]
@@ -94,10 +101,15 @@ function wrap_position!(pos::SVector{2, Float64}, space::ContinuousSpace{2, true
 end
 
 function move_agent!(agent::Car, model::TrafficModel)
-    new_pos = agent.pos + SVector(agent.vel[1] * 0.4, 0.0)
+    if agent.pos[2] == 0  # Calle horizontal
+        new_pos = agent.pos + SVector(agent.vel[1] * 0.4, 0.0)
+    else  # Calle vertical
+        new_pos = agent.pos + SVector(0.0, agent.vel[2] * 0.4)
+    end
 
     agent.pos = wrap_position!(new_pos, model.space)
 end
+
 
 function initialize_model(extent = (25, 10))
     space2d = ContinuousSpace(extent; spacing = 0.5, periodic = true)
@@ -106,12 +118,23 @@ function initialize_model(extent = (25, 10))
     light_horizontal, light_vertical = initialize_traffic_lights()
 
     agents = Vector{Car}()
+    
+    # Carros en la calle horizontal
     for i in 1:5
-        pos = SVector(rand(Uniform(0.0, 25.0)), 0.0)  # Cars starting at random x on the horizontal street
+        pos = SVector(rand(Uniform(0.0, 25.0)), 0.0)  # Calle horizontal
         vel = SVector(rand(Uniform(0.2, 1.0)), 0.0)
+        accelerating = true
+        push!(agents, Car(i, pos, vel, accelerating))
+    end
+    
+    # Carros en la calle vertical (modificamos el eje Y y la dirección de velocidad)
+    for i in 6:10
+        pos = SVector(0.0, rand(Uniform(0.0, 10.0)))  # Calle vertical
+        vel = SVector(0.0, rand(Uniform(0.2, 1.0)))  # Movimiento en el eje Y
         accelerating = true
         push!(agents, Car(i, pos, vel, accelerating))
     end
 
     return TrafficModel(agents, space2d, (light_horizontal, light_vertical))
 end
+
