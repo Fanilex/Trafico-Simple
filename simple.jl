@@ -1,53 +1,87 @@
 using Agents, Random
 using StaticArrays: SVector
 
-@agent struct Car(ContinuousAgent{2,Float64})
-    accelerating::Bool = true
+struct Car
+    id::Int
+    pos::SVector{2, Float64}
+    vel::SVector{2, Float64}
+    accelerating::Bool
 end
 
-accelerate(agent) = agent.vel[1] + 0.05
-decelerate(agent) = agent.vel[1] - 0.1
+struct TrafficLight
+    state::Symbol 
+    timer::Int   
+end
 
-function car_ahead(agent, model)
-    for neighbor in nearby_agents(agent, model, 1.0)
-        if neighbor.pos[1] > agent.pos[1]
+struct TrafficModel
+    agents::Vector{Car}   
+    space::ContinuousSpace{2, true, Float64, typeof(Agents.no_vel_update)}
+    traffic_lights::Tuple{TrafficLight, TrafficLight}
+end
+
+function cycle_light!(light::TrafficLight)
+    if light.timer >= 10
+        light.timer = 0
+        light.state = light.state == :green ? :yellow :
+                      light.state == :yellow ? :red : :green
+    else
+        light.timer += 1
+    end
+end
+
+function initialize_traffic_lights()
+    light_horizontal = TrafficLight(:green, 0)  
+    light_vertical = TrafficLight(:red, 0)      
+    return light_horizontal, light_vertical
+end
+
+accelerate(agent::Car) = agent.vel[1] + 0.05
+decelerate(agent::Car) = agent.vel[1] - 0.1
+
+function car_ahead(agent::Car, model::TrafficModel)
+    for neighbor in model.agents
+        if neighbor.pos[1] > agent.pos[1] && norm(neighbor.pos - agent.pos) < 1.0
             return neighbor
         end
     end
-    nothing
+    return nothing
 end
 
-function  agent_step!(agent, model)
-    new_velocity = isnothing(car_ahead(agent, model)) ? accelerate(agent) : decelerate(agent)
+function agent_step!(agent::Car, model::TrafficModel)
+    light_horizontal, light_vertical = model.traffic_lights
 
-    if new_velocity >= 1.0
-        new_velocity = 1.0
-        agent.accelerating = false
-    elseif new_velocity <= 0.0
+    current_light = agent.pos[1] > 0 ? light_horizontal : light_vertical
+
+    if current_light.state == :red
         new_velocity = 0.0
-        agent.accelerating = true
+    else
+        new_velocity = isnothing(car_ahead(agent, model)) ? accelerate(agent) : decelerate(agent)
     end
-    
-    agent.vel = (new_velocity, 0.0)
-    move_agent!(agent, model, 0.4)
+
+    new_velocity = clamp(new_velocity, 0.0, 1.0)
+
+    agent.vel = SVector(new_velocity, 0.0)
+    move_agent!(agent, model)
+end
+
+function move_agent!(agent::Car, model::TrafficModel)
+    new_pos = agent.pos + SVector(agent.vel[1] * 0.4, 0.0)
+    agent.pos = wrap_position(new_pos, model.space)
 end
 
 function initialize_model(extent = (25, 10))
     space2d = ContinuousSpace(extent; spacing = 0.5, periodic = true)
     rng = Random.MersenneTwister()
 
-    model = StandardABM(Car, space2d; rng, agent_step!, scheduler = Schedulers.Randomly())
+    light_horizontal, light_vertical = initialize_traffic_lights()
 
-    first = true
-    py = 1.0
-    for px in randperm(25)[1:5]
-        if first
-            add_agent!(SVector{2, Float64}(px, 0), model; vel=SVector{2, Float64}(1.0, 0.0))
-        else
-            add_agent!(SVector{2, Float64}(px, 0), model; vel=SVector{2, Float64}(rand(Uniform(0.2, 0.7)), 0.0))
-        end
-        first = false
-        py += 2.0
+    agents = Vector{Car}()
+    for i in 1:5
+        pos = SVector(rand(Uniform(0.0, 25.0)), 0.0) 
+        vel = SVector(rand(Uniform(0.2, 1.0)), 0.0)
+        accelerating = true
+        push!(agents, Car(i, pos, vel, accelerating))
     end
-    model
+
+    return TrafficModel(agents, space2d, (light_horizontal, light_vertical))
 end

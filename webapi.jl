@@ -12,30 +12,43 @@ route("/simulations", method = POST) do
     instances[id] = model
 
     cars = []
-    for car in allagents(model)
+    for car in model.agents  
         push!(cars, car)
     end
-    
+
     json(Dict("Location" => "/simulations/$id", "cars" => cars))
 end
 
 route("/simulations/:id") do
     println(payload(:id))
     model = instances[payload(:id)]
-    run!(model, 1)
-    cars = []
-    for car in allagents(model)
-        push!(cars, car)
+    
+    for car in model.agents
+        agent_step!(car, model)
     end
     
-    json(Dict("cars" => cars))
-end
+    light_horizontal, light_vertical = model.traffic_lights
+    cycle_light!(light_horizontal)
+    cycle_light!(light_vertical)
 
+    cars = []
+    for car in model.agents 
+        push!(cars, car)
+    end
+
+    json(Dict(
+        "cars" => cars,
+        "traffic_lights" => Dict(
+            "horizontal" => light_horizontal.state,
+            "vertical" => light_vertical.state
+        )
+    ))
+end
 
 Genie.config.run_as_server = true
 Genie.config.cors_headers["Access-Control-Allow-Origin"] = "*"
 Genie.config.cors_headers["Access-Control-Allow-Headers"] = "Content-Type"
-Genie.config.cors_headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS" 
+Genie.config.cors_headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
 Genie.config.cors_allowed_origins = ["*"]
 
 up()
