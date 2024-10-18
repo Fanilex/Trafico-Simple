@@ -7,16 +7,16 @@ export default function Home() {
   let [cars, setCars] = useState([]);
   let [lightHorizontal, setLightHorizontal] = useState('green');
   let [lightVertical, setLightVertical] = useState('red');
-  let [simSpeed, setSimSpeed] = useState(10); 
+  let [simSpeed, setSimSpeed] = useState(10); // Initial speed value
   const running = useRef(null);
   const avgSpeeds = useRef([]);
 
-  // Setup 
+  // Setup function
   let setup = () => {
     fetch('http://localhost:8000/simulations', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ speed: simSpeed }), 
+      body: JSON.stringify({ speed: simSpeed }), // Send initial speed to server
     })
       .then((resp) => resp.json())
       .then((data) => {
@@ -30,7 +30,7 @@ export default function Home() {
       .catch((err) => console.error('Error during setup:', err));
   };
 
-  // Start 
+  // Start function
   const handleStart = () => {
     if (!location) {
       console.error('No simulation location found. Did you run setup?');
@@ -38,7 +38,7 @@ export default function Home() {
     }
     avgSpeeds.current = [];
     running.current = setInterval(() => {
-      fetch(`http://localhost:8000${location}?speed=${simSpeed}`) 
+      fetch(`http://localhost:8000${location}?speed=${simSpeed}`) // Send speed with each fetch request
         .then((res) => {
           if (!res.ok) {
             return res.json().then((errData) => {
@@ -64,7 +64,7 @@ export default function Home() {
     }, 1000 / simSpeed);
   };
 
-  // Stop 
+  // Stop function
   const handleStop = () => {
     clearInterval(running.current);
     Plotly.newPlot('mydiv', [
@@ -80,7 +80,7 @@ export default function Home() {
     });
   };
 
-  // Slider para la velocidad
+  // Handle speed slider change
   const handleSpeedChange = (event) => {
     setSimSpeed(event.target.value);
   };
@@ -101,12 +101,12 @@ export default function Home() {
         <label>Velocidad: {simSpeed}</label>
       </div>
 
-      {/* Simulation */}
+      {/* SVG for simulation */}
       <svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" style={{ backgroundColor: 'lightgreen' }}>
         <rect x={0} y={200} width={800} height={80} style={{ fill: 'lightblue' }}></rect>
         <rect x={350} y={0} width={80} height={500} style={{ fill: 'lightblue' }}></rect>
 
-        {/* Semaforos */}
+        {/* Traffic Lights */}
         <g transform="translate(330, 240)">
           <rect width={20} height={40} style={{ fill: 'black' }} />
           <circle cx={10} cy={10} r={5} style={{ fill: lightHorizontal === 'red' ? 'red' : 'gray' }} />
@@ -121,7 +121,7 @@ export default function Home() {
           <circle cx={10} cy={30} r={5} style={{ fill: lightVertical === 'green' ? 'green' : 'gray' }} />
         </g>
 
-        {/* Coches */}
+        {/* Render cars */}
         {cars.map((car) => (
           <image
             key={car.id}
@@ -133,7 +133,7 @@ export default function Home() {
         ))}
       </svg>
 
-      {/* Grafica */}
+      {/* Div for graph */}
       <div id="mydiv" style={{ width: '100%', height: '500px' }}></div>
     </main>
   );

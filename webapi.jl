@@ -2,11 +2,12 @@ include("simple.jl")
 using Genie, Genie.Renderer.Json, Genie.Requests, HTTP
 using UUIDs
 
+# Store the instances
 const instances = Dict{String, TrafficModel}()
 
 route("/simulations", method = POST) do
    payload = jsonpayload()
-   speed = parse(Float64, get(payload, "speed", "1.0")) 
+   speed = parse(Float64, get(payload, "speed", "1.0"))  # Parse the speed from the payload
    model = initialize_model(speed)
    id = string(uuid1())
    instances[id] = model
@@ -20,14 +21,17 @@ end
 route("/simulations/:id", method = GET) do
    id = params(:id)
    if haskey(instances, id)
-       speed = parse(Float64, get(params(), "speed", "1.0")) 
+       speed = parse(Float64, get(params(), "speed", "1.0"))  # Ensure speed is parsed correctly
        model = instances[id]
+       # Update agents with the given speed
        for car in model.agents
            agent_step!(car, model, speed)
        end
+       # Update traffic lights
        light_horizontal, light_vertical = model.traffic_lights
        cycle_light!(light_horizontal)
        cycle_light!(light_vertical)
+       # Car positions
        cars = []
        for car in model.agents
            push!(cars, Dict("id" => car.id, "pos" => car.pos))
