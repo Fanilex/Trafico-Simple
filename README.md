@@ -81,9 +81,9 @@ En la tercera parte del proyecto, se introdujeron múltiples vehículos en la si
 - **Monitoreo de la Velocidad Promedio:** Se implementó un monitoreo de la velocidad promedio de los vehículos en la simulación. Los resultados se compararon bajo diferentes configuraciones: velocidad aleatoria vs controlada por slider y con diferentes números de vehículos (3, 5 y 7 autos).
 
   ### Análisis con 3 carros
-  Aceleración y desaceleración: Las fluctuaciones en la velocidad promedio reflejan la interacción directa de los vehículos con los semáforos, donde los estados rojo y verde provocan detenciones y aceleraciones, respectivamente.
-Sincronización de los semáforos: La estabilización de la velocidad promedio a partir de los 100 segundos indica que los semáforos y los vehículos han alcanzado un estado de equilibrio en la simulación, donde los vehículos no están siendo interrumpidos y pueden moverse a su velocidad máxima.
-Interacción efectiva con el entorno: La simulación responde adecuadamente a las reglas de tránsito implementadas, con un comportamiento coherente que refleja las fases de los semáforos y las dinámicas del tráfico.
+  - Aceleración y desaceleración: Las fluctuaciones en la velocidad promedio reflejan la interacción directa de los vehículos con los semáforos, donde los estados rojo y verde provocan detenciones y aceleraciones, respectivamente.
+  - Sincronización de los semáforos: La estabilización de la velocidad promedio a partir de los 100 segundos indica que los semáforos y los vehículos han alcanzado un estado de equilibrio en la simulación, donde los vehículos no están siendo interrumpidos y pueden moverse a su velocidad máxima.
+  - Interacción efectiva con el entorno: La simulación responde adecuadamente a las reglas de tránsito implementadas, con un comportamiento coherente que refleja las fases de los semáforos y las dinámicas del tráfico.
   ![image](https://github.com/user-attachments/assets/479d74a2-0029-4226-8aae-4656dc80422e)
   
   ![image](https://github.com/user-attachments/assets/a732d0d2-9319-48b7-9c26-1d75b66c9d39)
