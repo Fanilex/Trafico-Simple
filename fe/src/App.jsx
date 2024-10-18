@@ -1,5 +1,6 @@
 'use client'
 import { useRef, useState } from "react";
+import Plotly from 'plotly.js/dist/plotly';
 
 export default function Home() {
   let [location, setLocation] = useState(""); 
@@ -8,7 +9,9 @@ export default function Home() {
   let [lightVertical, setLightVertical] = useState("red");
   let [simSpeed, setSimSpeed] = useState(10);
   const running = useRef(null);
+  const avgSpeeds = useRef([]); // Almacena las velocidades promedio en cada iteración
 
+  // Función de configuración
   let setup = () => {
     fetch("http://localhost:8000/simulations", {
       method: 'POST',
@@ -27,11 +30,13 @@ export default function Home() {
       .catch(err => console.error("Error during setup:", err));
   };
 
+  // Función de inicio
   const handleStart = () => {
     if (!location) {
       console.error("No simulation location found. Did you run setup?");
       return;
     }
+    avgSpeeds.current = []; // Reinicia las velocidades promedio
     running.current = setInterval(() => {
       fetch("http://localhost:8000" + location)
         .then(res => {
@@ -46,6 +51,11 @@ export default function Home() {
           setCars(data["cars"]);
           setLightHorizontal(data["traffic_lights"]["horizontal"]);
           setLightVertical(data["traffic_lights"]["vertical"]);
+          
+          // Calcula la velocidad promedio de los coches
+          let totalSpeed = data["cars"].reduce((sum, car) => sum + car.speed, 0);
+          let avgSpeed = totalSpeed / data["cars"].length;
+          avgSpeeds.current.push(avgSpeed); // Almacena la velocidad promedio
         })
         .catch(err => {
           console.error("Error during simulation:", err.message);
@@ -54,8 +64,19 @@ export default function Home() {
     }, 1000 / simSpeed);
   };
 
+  // Función de detención
   const handleStop = () => {
     clearInterval(running.current);
+    // Graficar la velocidad promedio utilizando Plotly
+    Plotly.newPlot('mydiv', [{
+      y: avgSpeeds.current,
+      mode: 'lines',
+      line: { color: '#80CAF6' }
+    }], {
+      title: 'Velocidad promedio de los coches',
+      xaxis: { title: 'Tiempo (s)' },
+      yaxis: { title: 'Velocidad promedio' }
+    });
   };
 
   return (
@@ -65,6 +86,8 @@ export default function Home() {
         <button onClick={handleStart}>Start</button>
         <button onClick={handleStop}>Stop</button>
       </div>
+      
+      {/* SVG de la simulación */}
       <svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" style={{ backgroundColor: "lightgreen" }}>
         {/* Calles */}
         <rect x={0} y={200} width={800} height={80} style={{ fill: "lightblue" }}></rect>
@@ -96,6 +119,9 @@ export default function Home() {
           />
         ))}
       </svg>
+
+      {/* Div para la gráfica */}
+      <div id="mydiv" style={{ width: "100%", height: "500px" }}></div>
     </main>
   );
 }
