@@ -1,4 +1,3 @@
-"webapi.jl":
 
 include("simple.jl")
 using Genie, Genie.Renderer.Json, Genie.Requests, HTTP
