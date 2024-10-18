@@ -2,14 +2,13 @@
 import { useRef, useState } from "react";
 
 export default function Home() {
-  let [location, setLocation] = useState(""); // Holds the simulation URL
-  let [cars, setCars] = useState([]);         // Holds the cars data
+  let [location, setLocation] = useState(""); 
+  let [cars, setCars] = useState([]);  
   let [lightHorizontal, setLightHorizontal] = useState("green");
   let [lightVertical, setLightVertical] = useState("red");
   let [simSpeed, setSimSpeed] = useState(10);
   const running = useRef(null);
 
-  // Setup
   let setup = () => {
     fetch("http://localhost:8000/simulations", {
       method: 'POST',
@@ -20,7 +19,7 @@ export default function Home() {
       .then(data => {
         if (data["Location"]) {
           setLocation(data["Location"]);  
-          setCars(data["cars"]);        
+          setCars(data["cars"]);  
         } else {
           console.error("Setup failed: No Location returned");
         }
@@ -33,11 +32,10 @@ export default function Home() {
       console.error("No simulation location found. Did you run setup?");
       return;
     }
-  
     running.current = setInterval(() => {
       fetch("http://localhost:8000" + location)
         .then(res => {
-          if (!res.ok) { 
+          if (!res.ok) {
             return res.json().then(errData => {
               throw new Error(errData.error);
             });
@@ -51,12 +49,11 @@ export default function Home() {
         })
         .catch(err => {
           console.error("Error during simulation:", err.message);
-          handleStop();  // Si hay error pues detiene la simulacion
+          handleStop();  
         });
     }, 1000 / simSpeed);
-  };  
+  };
 
-  // stop
   const handleStop = () => {
     clearInterval(running.current);
   };
@@ -92,10 +89,10 @@ export default function Home() {
         {cars.map(car => (
           <image
             key={car.id}
-            x={car.pos[1] === 0 ? car.pos[0] * 32 : 370}  // Posición x para coches en calle horizontal, 370 para los verticales
-            y={car.pos[1] === 0 ? 240 : car.pos[1] * 32}   // Posición y para coches en calle vertical, 240 para los horizontales
+            x={car.pos[1] === 0 ? car.pos[0] * 32 : 370}  
+            y={car.pos[1] === 0 ? 240 : car.pos[1] * 32}  
             width={32}
-            href={car.id === 1 ? "./pato_horizontal.png" : "./pato_vertical.png"}
+            href={car.pos[1] === 0 ? "./pato_horizontal.png" : "./pato_vertical.png"} 
           />
         ))}
       </svg>

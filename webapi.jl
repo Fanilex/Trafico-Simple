@@ -19,7 +19,7 @@ route("/simulations", method = POST) do
 end
 
 route("/simulations/:id", method = GET) do
-    id = params(:id)  # Get the simulation ID from the URL
+    id = params(:id) 
     if haskey(instances, id)
         model = instances[id]
         
