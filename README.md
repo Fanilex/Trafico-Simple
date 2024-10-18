@@ -100,7 +100,7 @@ En la tercera parte del proyecto, se introdujeron múltiples vehículos en la si
   - Mayor densidad de vehículos: Con 7 patos, se observan más caídas pronunciadas en la velocidad promedio en comparación con las simulaciones anteriores. Esto sugiere que la mayor densidad de vehículos provoca más interacciones con los semáforos, lo que ralentiza el flujo del tráfico de manera más frecuente.
   - Interacciones más complejas: Las fluctuaciones son más notables y frecuentes en comparación con las simulaciones de 3 y 5 patos, lo que implica que la cantidad de vehículos en el sistema aumenta la complejidad de la simulación. Las caídas rápidas en la velocidad promedio indican que hay más vehículos que se detienen en los semáforos simultáneamente, lo que provoca interrupciones más grandes en el flujo de tráfico.
   - Recuperación más lenta: Aunque los vehículos eventualmente alcanzan una velocidad cercana a 1, la recuperación es más lenta y menos constante debido a la mayor cantidad de vehículos y su interacción con el entorno.
-  - 
+    
   ![image](https://github.com/user-attachments/assets/cdcce8ab-a1c4-4e10-9e1f-b943e1f9c0cf)
 
 ### Compración de las 3 graficas
