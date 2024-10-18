@@ -147,7 +147,7 @@ function initialize_model(speed::Float64, extent = (25, 10))
     # 5 coches en la calle vertical
     for i in 6:10
         pos = SVector(12.5, rand(Uniform(0.0, 10.0)))  # Calle vertical
-        vel = SVector(0.0, speed)  # Velocidad uniforme en Y
+        vel = SVector(0.0, speed)  
         accelerating = true
         push!(agents, Car(i, pos, vel, accelerating))
     end
