@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Plotly from 'plotly.js/dist/plotly';
 
 export default function Home() {
@@ -7,7 +7,7 @@ export default function Home() {
   let [cars, setCars] = useState([]);
   let [lightHorizontal, setLightHorizontal] = useState('green');
   let [lightVertical, setLightVertical] = useState('red');
-  let [simSpeed, setSimSpeed] = useState(50); // Initial speed value
+  let [simSpeed, setSimSpeed] = useState(10); // Initial speed value
   const running = useRef(null);
   const avgSpeeds = useRef([]);
 
@@ -30,15 +30,14 @@ export default function Home() {
       .catch((err) => console.error('Error during setup:', err));
   };
 
-  // Start function
   const handleStart = () => {
     if (!location) {
       console.error('No simulation location found. Did you run setup?');
       return;
     }
-    avgSpeeds.current = [];
+    avgSpeeds.current = [];  // Limpiar el array de velocidades al inicio
     running.current = setInterval(() => {
-      fetch(`http://localhost:8000${location}?speed=${simSpeed}`) // Send speed with each fetch request
+      fetch(`http://localhost:8000${location}?speed=${simSpeed}`) // Enviar la velocidad con cada solicitud
         .then((res) => {
           if (!res.ok) {
             return res.json().then((errData) => {
@@ -51,52 +50,53 @@ export default function Home() {
           setCars(data['cars']);
           setLightHorizontal(data['traffic_lights']['horizontal']);
           setLightVertical(data['traffic_lights']['vertical']);
-
-          // Calculate the average speed of the cars
+  
+          // Calcular la velocidad promedio de los coches
           let totalSpeed = data['cars'].reduce((sum, car) => sum + car.speed, 0);
           let avgSpeed = totalSpeed / data['cars'].length;
-          avgSpeeds.current.push(avgSpeed);
-
-          // Update the graph with new data
-          Plotly.react('mydiv', [
-            {
-              y: avgSpeeds.current,
-              mode: 'lines',
-              line: { color: '#80CAF6' },
-            },
-          ]);
+          avgSpeeds.current.push(avgSpeed); // Agregar la velocidad promedio al array
+  
+          // Para depuración, ver qué datos se están registrando
+          console.log("Velocidades acumuladas:", avgSpeeds.current);
         })
         .catch((err) => {
           console.error('Error during simulation:', err.message);
           handleStop();
         });
-    }, 1000 / simSpeed);
+    }, 1000 / simSpeed);  // Ajustar el intervalo según la velocidad
   };
+  
 
-  // Stop function
   const handleStop = () => {
-    clearInterval(running.current);
+    clearInterval(running.current); // Detener la simulación
+  
+    // Verificar si hay datos acumulados
+    if (avgSpeeds.current.length === 0) {
+      console.error("No hay datos de velocidad acumulados.");
+      return;
+    }
+  
+
+    Plotly.newPlot('mydiv', [
+      {
+        y: [1, 2, 3, 4],  // Prueba con datos fijos
+        mode: 'lines',
+        line: { color: '#80CAF6' },
+      },
+    ], {
+      title: 'Prueba de Plotly',
+      xaxis: { title: 'Tiempo (s)' },
+      yaxis: { title: 'Valor' },
+    });
+    
   };
+  
+  
 
   // Handle speed slider change
   const handleSpeedChange = (event) => {
     setSimSpeed(event.target.value);
   };
-
-  // Initialize the empty graph when the component mounts
-  useEffect(() => {
-    Plotly.newPlot('mydiv', [
-      {
-        y: [],
-        mode: 'lines',
-        line: { color: '#80CAF6' },
-      },
-    ], {
-      title: 'Velocidad promedio de los coches',
-      xaxis: { title: 'Tiempo (s)' },
-      yaxis: { title: 'Velocidad promedio' },
-    });
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
 
   return (
     <main>
