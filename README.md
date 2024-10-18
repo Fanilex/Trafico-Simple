@@ -94,11 +94,19 @@ En la tercera parte del proyecto, se introdujeron múltiples vehículos en la si
 
   ![image](https://github.com/user-attachments/assets/a732d0d2-9319-48b7-9c26-1d75b66c9d39)
  
-
+### Análisis con 7 carros
+  - Mayor densidad de vehículos: Con 7 patos, se observan más caídas pronunciadas en la velocidad promedio en comparación con las simulaciones anteriores. Esto sugiere que la mayor densidad de vehículos provoca más interacciones con los semáforos, lo que ralentiza el flujo del tráfico de manera más frecuente.
+  - Interacciones más complejas: Las fluctuaciones son más notables y frecuentes en comparación con las simulaciones de 3 y 5 patos, lo que implica que la cantidad de vehículos en el sistema aumenta la complejidad de la simulación. Las caídas rápidas en la velocidad promedio indican que hay más vehículos que se detienen en los semáforos simultáneamente, lo que provoca interrupciones más grandes en el flujo de tráfico.
+  - Recuperación más lenta: Aunque los vehículos eventualmente alcanzan una velocidad cercana a 1, la recuperación es más lenta y menos constante debido a la mayor cantidad de vehículos y su interacción con el entorno.
+  - 
   ![image](https://github.com/user-attachments/assets/cdcce8ab-a1c4-4e10-9e1f-b943e1f9c0cf)
 
+### Compración de las 3 graficas
+- 3 patos: La simulación con 3 patos es la más estable y presenta el flujo de tráfico más fluido. Las fluctuaciones son menores, y los vehículos alcanzan rápidamente una velocidad promedio constante, lo que sugiere que hay menos interacción con los semáforos y menos colisiones o detenciones simultáneas.
+- 5 patos: A medida que aumenta la densidad, también lo hacen las fluctuaciones en la velocidad promedio. Sin embargo, la simulación aún logra estabilizarse después de 100 segundos, aunque con más interrupciones que en la simulación con 3 patos.
+- 7 patos: Con 7 patos, la simulación presenta las mayores fluctuaciones y caídas en la velocidad promedio. La densidad adicional de vehículos provoca más interrupciones en el flujo de tráfico, lo que retrasa la estabilización y provoca un comportamiento más caótico.
 
-
+En resumen, a mayor densidad de vehículos, mayor es el número de fluctuaciones y caídas en la velocidad promedio, lo que retrasa la estabilización del tráfico. Sin embargo, incluso con 7 patos, los vehículos logran eventualmente alcanzar una velocidad promedio constante, aunque el proceso es más lento y está plagado de más interrupciones.
 
 ---
 
