@@ -94,7 +94,7 @@ export default function Home() {
             x={car.pos[0] * 32}
             y={200 + car.pos[1] * 20}
             width={32}
-            href={car.id === 1 ? "./pato.png" : "./pato.png"}
+            href={car.id === 1 ? "./pato_horizontal.png" : "./pato_vertical.png"}
           />
         ))}
       </svg>
