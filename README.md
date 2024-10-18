@@ -84,13 +84,20 @@ En la tercera parte del proyecto, se introdujeron múltiples vehículos en la si
   - Aceleración y desaceleración: Las fluctuaciones en la velocidad promedio reflejan la interacción directa de los vehículos con los semáforos, donde los estados rojo y verde provocan detenciones y aceleraciones, respectivamente.
   - Sincronización de los semáforos: La estabilización de la velocidad promedio a partir de los 100 segundos indica que los semáforos y los vehículos han alcanzado un estado de equilibrio en la simulación, donde los vehículos no están siendo interrumpidos y pueden moverse a su velocidad máxima.
   - Interacción efectiva con el entorno: La simulación responde adecuadamente a las reglas de tránsito implementadas, con un comportamiento coherente que refleja las fases de los semáforos y las dinámicas del tráfico.
+  
   ![image](https://github.com/user-attachments/assets/479d74a2-0029-4226-8aae-4656dc80422e)
-  
-  ![image](https://github.com/user-attachments/assets/a732d0d2-9319-48b7-9c26-1d75b66c9d39)
-  Imagen 2. Análisis con 5 carros.
 
-  
-  Imagen 3. Análisis con 7 carros.
+### Análisis con 5 carros
+  - Aceleración y desaceleración: La caída y recuperación en la velocidad promedio observada en los primeros 60 segundos indica una interacción continua de los vehículos con los semáforos. Las fluctuaciones en esta etapa sugieren que los vehículos están desacelerando o deteniéndose temporalmente, pero también acelerando cuando los semáforos cambian a verde.
+  - Patrón de tráfico estabilizado: La estabilización en la velocidad promedio cerca de 1 a partir de los 100 segundos sugiere que los vehículos han alcanzado un patrón de tráfico estable, donde los semáforos ya no están causando interrupciones significativas en el flujo.
+  - Interacciones menos severas: A pesar de las pequeñas caídas en la velocidad promedio alrededor de los 120 segundos, la magnitud de las fluctuaciones es menor, lo que sugiere que la simulación ha entrado en una fase de interacción más fluida entre los vehículos y los semáforos.
+
+  ![image](https://github.com/user-attachments/assets/a732d0d2-9319-48b7-9c26-1d75b66c9d39)
+ 
+
+  ![image](https://github.com/user-attachments/assets/cdcce8ab-a1c4-4e10-9e1f-b943e1f9c0cf)
+
+
 
 
 ---
