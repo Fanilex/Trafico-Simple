@@ -26,7 +26,7 @@ end
 
 # Traffic light cycling function
 function cycle_light!(light::TrafficLight)
-    if light.timer >= 10
+    if light.timer >= 20
         light.timer = 0
         light.state = light.state == :green ? :yellow :
                       light.state == :yellow ? :red : :green
@@ -62,6 +62,7 @@ function agent_step!(agent::Car, model::TrafficModel)
     # Access the traffic lights from the model
     light_horizontal, light_vertical = model.traffic_lights
 
+<<<<<<< HEAD
     # Modify car velocity based on light state
     if agent.direction == :horizontal
         # Horizontal cars respect the horizontal traffic light
@@ -72,6 +73,11 @@ function agent_step!(agent::Car, model::TrafficModel)
     end
 
     # Adjust velocity based on traffic light and cars ahead
+=======
+    # Decidir el semáforo basado en la posición
+    current_light = agent.pos[2] == 0 ? light_horizontal : light_vertical  # Cambia si están en el eje Y
+
+>>>>>>> kong
     if current_light.state == :red
         new_velocity = 0.0
     else
@@ -81,6 +87,7 @@ function agent_step!(agent::Car, model::TrafficModel)
     # Limit the velocity
     new_velocity = clamp(new_velocity, 0.0, 1.0)
 
+<<<<<<< HEAD
     # Update agent's velocity and position
     if agent.direction == :horizontal
         agent.vel = SVector(new_velocity, 0.0)
@@ -91,6 +98,19 @@ function agent_step!(agent::Car, model::TrafficModel)
 end
 
 # Custom function to wrap the position within space boundaries
+=======
+    # Actualiza la velocidad dependiendo de la dirección (eje X o Y)
+    if agent.pos[2] == 0  # Calle horizontal
+        agent.vel = SVector(new_velocity, 0.0)
+    else  # Calle vertical
+        agent.vel = SVector(0.0, new_velocity)
+    end
+
+    move_agent!(agent, model)
+end
+
+
+>>>>>>> kong
 function wrap_position!(pos::SVector{2, Float64}, space::ContinuousSpace{2, true, Float64, typeof(Agents.no_vel_update)})
     # Get the space's extents (limits)
     xmin, xmax = 0.0, space.extent[1]
@@ -118,10 +138,16 @@ end
 
 # Move the agent in the space
 function move_agent!(agent::Car, model::TrafficModel)
+<<<<<<< HEAD
     # Move the agent based on the velocity and update position
     if agent.direction == :horizontal
         new_pos = agent.pos + SVector(agent.vel[1] * 0.4, 0.0)
     else
+=======
+    if agent.pos[2] == 0  # Calle horizontal
+        new_pos = agent.pos + SVector(agent.vel[1] * 0.4, 0.0)
+    else  # Calle vertical
+>>>>>>> kong
         new_pos = agent.pos + SVector(0.0, agent.vel[2] * 0.4)
     end
 
@@ -129,7 +155,11 @@ function move_agent!(agent::Car, model::TrafficModel)
     agent.pos = wrap_position!(new_pos, model.space)
 end
 
+<<<<<<< HEAD
 # Initialize the model with agents, streets, and traffic lights
+=======
+
+>>>>>>> kong
 function initialize_model(extent = (25, 10))
     # Create a 2D continuous space for the agents
     space2d = ContinuousSpace(extent; spacing = 0.5, periodic = true)
@@ -141,9 +171,15 @@ function initialize_model(extent = (25, 10))
     # Create agents (Cars)
     agents = Vector{Car}()
     
+<<<<<<< HEAD
     # Create 5 horizontal cars (starting at random x on the horizontal street)
     for i in 1:5
         pos = SVector(rand(Uniform(0.0, 25.0)), 0.0)  # Positioned along the horizontal street
+=======
+    # Carros en la calle horizontal
+    for i in 1:5
+        pos = SVector(rand(Uniform(0.0, 25.0)), 0.0)  # Calle horizontal
+>>>>>>> kong
         vel = SVector(rand(Uniform(0.2, 1.0)), 0.0)
         push!(agents, Car(i, pos, vel, :horizontal, true))
     end
@@ -155,7 +191,16 @@ function initialize_model(extent = (25, 10))
         vel = SVector(0.0, rand(Uniform(0.2, 1.0)))
         push!(agents, Car(i, pos, vel, :vertical, true))
     end
+    
+    # Carros en la calle vertical (modificamos el eje Y y la dirección de velocidad)
+    for i in 6:10
+        pos = SVector(0.0, rand(Uniform(0.0, 10.0)))  # Calle vertical
+        vel = SVector(0.0, rand(Uniform(0.2, 1.0)))  # Movimiento en el eje Y
+        accelerating = true
+        push!(agents, Car(i, pos, vel, accelerating))
+    end
 
     # Return the TrafficModel with agents, space, and traffic lights
     return TrafficModel(agents, space2d, (light_horizontal, light_vertical))
 end
+
