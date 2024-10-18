@@ -36,8 +36,21 @@ function initialize_traffic_lights()
     return light_horizontal, light_vertical
 end
 
-accelerate(agent::Car) = agent.vel[1] + 0.05
-decelerate(agent::Car) = agent.vel[1] - 0.1
+function accelerate(agent::Car)
+    if agent.pos[2] == 0  # Coches horizontales
+        return SVector(clamp(agent.vel[1] + 0.05, 0.0, 1.0), 0.0)
+    else  # Coches verticales
+        return SVector(0.0, clamp(agent.vel[2] + 0.05, 0.0, 1.0))
+    end
+end
+
+function decelerate(agent::Car)
+    if agent.pos[2] == 0  # Coches horizontales
+        return SVector(clamp(agent.vel[1] - 0.1, 0.0, 1.0), 0.0)
+    else  # Coches verticales
+        return SVector(0.0, clamp(agent.vel[2] - 0.1, 0.0, 1.0))
+    end
+end
 
 function car_ahead(agent::Car, model::TrafficModel)
     for neighbor in model.agents
@@ -54,30 +67,29 @@ function agent_step!(agent::Car, model::TrafficModel)
     horizontal_intersection_position = 12.5  
     vertical_intersection_position = 5.0    
 
-    if agent.pos[2] == 0
-        if agent.pos[1] <= horizontal_intersection_position  # Antes del semaforo
+    if agent.pos[2] == 0  # Coches en calle horizontal
+        if agent.pos[1] <= horizontal_intersection_position  # Antes del semáforo
             current_light = light_horizontal
             if current_light.state == :red
-                agent.vel = SVector(0.0, 0.0)  # Detiene en el semaforo
+                agent.vel = SVector(0.0, 0.0)  # Detener en el semáforo
             else
-                agent.vel = SVector(clamp(accelerate(agent), 0.0, 1.0), 0.0)  
+                agent.vel = accelerate(agent)  # Acelerar si está en verde
             end
         else
-            # Después del semaforo les vale respetarlo
-            agent.vel = SVector(clamp(accelerate(agent), 0.0, 1.0), 0.0)
+            agent.vel = accelerate(agent)  # Acelera después del semáforo
         end
     end
 
-    if agent.pos[1] == 12.5  
+    if agent.pos[1] == 12.5  # Coches en calle vertical
         if abs(agent.pos[2]) <= vertical_intersection_position 
             current_light = light_vertical
             if current_light.state == :red
-                agent.vel = SVector(0.0, 0.0) 
+                agent.vel = SVector(0.0, 0.0)  # Detener en el semáforo
             else
-                agent.vel = SVector(0.0, clamp(accelerate(agent), 0.0, 1.0)) 
+                agent.vel = accelerate(agent)  # Acelerar si está en verde
             end
         else
-            agent.vel = SVector(0.0, clamp(accelerate(agent), 0.0, 1.0))
+            agent.vel = accelerate(agent)  # Acelera después del semáforo
         end
     end
 
@@ -125,16 +137,20 @@ function initialize_model(extent = (25, 10))
 
     agents = Vector{Car}()
 
+    initial_speed = 0.5  # Velocidad inicial unificada para todos los coches
+
+    # Coches horizontales
     for i in 1:5
         pos = SVector(rand(Uniform(0.0, 25.0)), 0.0)  # Calle horizontal
-        vel = SVector(rand(Uniform(0.2, 1.0)), 0.0)
+        vel = SVector(initial_speed, 0.0)  # Velocidad uniforme en X
         accelerating = true
         push!(agents, Car(i, pos, vel, accelerating))
     end
 
+    # Coches verticales
     for i in 6:10
         pos = SVector(12.5, rand(Uniform(0.0, 10.0)))  # Calle vertical
-        vel = SVector(0.0, rand(Uniform(0.2, 1.0)))  # Movimiento en el eje Y
+        vel = SVector(0.0, initial_speed)  # Velocidad uniforme en Y
         accelerating = true
         push!(agents, Car(i, pos, vel, accelerating))
     end
